@@ -1,0 +1,28 @@
+# Start everything with:  docker compose up --build
+# Then open http://localhost:8080  (port 8080 is inside the 8000-8100 range required for the VM).
+services:
+  server:
+    build: ./server
+    environment:
+      ConnectionStrings__Default: "Data Source=/data/app.db"
+      # Set to "true" once the site is served over HTTPS.
+      Auth__SecureCookie: "false"
+    volumes:
+      - server-data:/data
+    # Not published: the API is only reachable by the client container.
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    environment:
+      API_URL: http://server:8080
+    ports:
+      - "8080:3000"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  server-data:

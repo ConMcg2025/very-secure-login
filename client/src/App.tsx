@@ -1,24 +1,33 @@
-import { APITester } from "./APITester";
 import "./index.css";
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
+import { useCallback, useEffect, useState } from "react";
+import { api } from "./api";
+import { LoginForm } from "./LoginForm";
+import type { Me } from "./types";
+import { UsersPage } from "./UsersPage";
 
 export function App() {
-  return (
-    <div className="app">
-      <div className="logo-container">
-        <img src={logo} alt="Bun Logo" className="logo bun-logo" />
-        <img src={reactLogo} alt="React Logo" className="logo react-logo" />
-      </div>
+  // undefined = still checking for an existing session, null = signed out
+  const [me, setMe] = useState<Me | null | undefined>(undefined);
 
-      <h1>Bun + React</h1>
-      <p>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </p>
-      <APITester />
-    </div>
-  );
+  useEffect(() => {
+    api
+      .me()
+      .then(setMe)
+      .catch(() => setMe(null));
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await api.logout();
+    } finally {
+      setMe(null);
+    }
+  }, []);
+
+  if (me === undefined) return <p className="muted">Loading…</p>;
+  if (me === null) return <LoginForm onLoggedIn={setMe} />;
+  return <UsersPage me={me} onLogout={logout} onSessionExpired={() => setMe(null)} />;
 }
 
 export default App;
