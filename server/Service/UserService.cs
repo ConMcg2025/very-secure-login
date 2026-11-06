@@ -14,7 +14,7 @@ public static partial class UserRules
 {
     public const int MinUsernameLength = 3;
     public const int MaxUsernameLength = 32;
-    public const int MinPasswordLength = 8;
+    public const int MinPasswordLength = 3;
     public const int MaxPasswordLength = 128;
 
     [GeneratedRegex("^[A-Za-z0-9_.-]+$")]

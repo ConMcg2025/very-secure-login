@@ -4,11 +4,6 @@ using Service;
 
 namespace API.Controllers;
 
-/// <summary>
-/// Requires a signed-in user. Which operations a given role may perform is decided
-/// in <see cref="UserService"/> (see <see cref="RolePolicy"/>), because it depends on
-/// the role of the account being touched, not only on the caller.
-/// </summary>
 [ApiController]
 [Authorize]
 [Route("api/users")]

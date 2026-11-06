@@ -75,7 +75,7 @@ export function UserDialog({ me, user, onClose, onSaved }: Props) {
             value={password}
             onChange={e => setPassword(e.target.value)}
             required={!isEdit}
-            minLength={8}
+            minLength={3}
             maxLength={128}
             autoComplete="new-password"
           />

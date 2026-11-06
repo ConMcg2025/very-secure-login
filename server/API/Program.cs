@@ -10,21 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("ConnectionStrings:Default is not configured.");
 
-// ---- Data access (Linq2DB + SQLite) -------------------------------------------------
 builder.Services.AddSingleton(Database.CreateOptions(connectionString));
 builder.Services.AddScoped<AppDb>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// ---- Application services -----------------------------------------------------------
 builder.Services.AddSingleton<IPasswordHasher, Argon2PasswordHasher>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SeedService>();
 
-// ---- Authentication: HttpOnly session cookie ----------------------------------------
-// The cookie is HttpOnly (not readable by JavaScript, so XSS cannot steal it) and
-// SameSite=Strict (not sent on cross-site requests, which blocks CSRF).
-// Set Auth:SecureCookie=true when the site is served over HTTPS.
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -38,7 +32,6 @@ builder.Services
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
 
-        // An API should answer 401/403, not redirect to a login page.
         options.Events.OnRedirectToLogin = ctx =>
         {
             ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -50,8 +43,6 @@ builder.Services
             return Task.CompletedTask;
         };
 
-        // Checked on every request: if the account was deleted, renamed, given another
-        // role or got a new password, the old session is rejected immediately.
         options.Events.OnValidatePrincipal = async ctx =>
         {
             var claimed = ctx.Principal.TryGetActor();
@@ -67,9 +58,6 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 
-// ---- Brute-force protection on the login endpoint -----------------------------------
-// The client's Bun server forwards the real client address in X-Forwarded-For. The API
-// is only reachable through it (it is not published by docker-compose).
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -89,14 +77,12 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-// ---- Web API ------------------------------------------------------------------------
 builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-// ---- Database: create schema and seed the initial accounts ---------------------------
 Database.EnsureCreated(connectionString);
 using (var scope = app.Services.CreateScope())
 {

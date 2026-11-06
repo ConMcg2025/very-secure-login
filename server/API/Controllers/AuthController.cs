@@ -9,7 +9,6 @@ namespace API.Controllers;
 
 public sealed record LoginRequest(string? Username, string? Password);
 
-/// <summary>What the client needs to know about the signed-in user (including what they may manage).</summary>
 public sealed record MeResponse(int Id, string Username, string Role, string[] ManageableRoles)
 {
     public static MeResponse From(Actor actor) => new(
