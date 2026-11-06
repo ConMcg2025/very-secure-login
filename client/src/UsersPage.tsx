@@ -12,7 +12,7 @@ interface Props {
 export function UsersPage({ me, onLogout, onSessionExpired }: Props) {
   const [users, setUsers] = useState<UserRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // undefined = dialog closed, null = "add", UserRow = "edit"
+  
   const [dialog, setDialog] = useState<UserRow | null | undefined>(undefined);
 
   const handleError = useCallback(
@@ -50,21 +50,34 @@ export function UsersPage({ me, onLogout, onSessionExpired }: Props) {
   const canCreate = me.manageableRoles.length > 0;
 
   return (
-    <main className="card wide">
-      <header className="topbar">
-        <div>
-          <h1>Users</h1>
-          <p className="muted">
-            Signed in as <strong>{me.username}</strong> <span className={`badge ${me.role}`}>{me.role}</span>
-          </p>
+    <main className="app-shell">
+      <header className="app-header">
+        <div className="brand-lockup compact">
+          <span className="brand-name">Kvist <span>&amp;</span> Bjælke</span>
         </div>
+        <div className="account-area">
+          <div className="welcome-copy">
+            <span className="account-label">Welcome back</span>
+            <strong>{me.username}</strong>
+          </div>
+          <span className={`badge ${me.role}`}>{me.role}</span>
+          <button className="signout-button" onClick={onLogout}>Sign out</button>
+        </div>
+      </header>
+
+      <section className="users-content">
+        <header className="topbar">
+          <div>
+            <span className="eyebrow">WORKSPACE / ACCESS</span>
+            <h1>User management</h1>
+            <p className="muted page-intro">Manage accounts and access levels for your organisation.</p>
+          </div>
         <div className="actions">
           {canCreate && (
             <button className="primary" onClick={() => setDialog(null)}>
               Add user
             </button>
           )}
-          <button onClick={onLogout}>Sign out</button>
         </div>
       </header>
 
@@ -77,10 +90,11 @@ export function UsersPage({ me, onLogout, onSessionExpired }: Props) {
       {users === null ? (
         <p className="muted">Loading…</p>
       ) : (
+        <div className="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Username</th>
+              <th>Account</th>
               <th>Role</th>
               <th>Created</th>
               {canCreate && <th aria-label="Actions" />}
@@ -90,8 +104,8 @@ export function UsersPage({ me, onLogout, onSessionExpired }: Props) {
             {users.map(u => (
               <tr key={u.id}>
                 <td>
-                  {u.username}
-                  {u.id === me.id && <span className="muted"> (you)</span>}
+                  <span className="user-name">{u.username}</span>
+                  {u.id === me.id && <span className="you-label">YOU</span>}
                 </td>
                 <td>
                   <span className={`badge ${u.role}`}>{u.role}</span>
@@ -113,13 +127,14 @@ export function UsersPage({ me, onLogout, onSessionExpired }: Props) {
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={4} className="muted">
+                <td colSpan={canCreate ? 4 : 3} className="muted">
                   No users.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+        </div>
       )}
 
       {!canCreate && <p className="muted">Your role has read-only access.</p>}
@@ -135,6 +150,7 @@ export function UsersPage({ me, onLogout, onSessionExpired }: Props) {
           }}
         />
       )}
+      </section>
     </main>
   );
 }

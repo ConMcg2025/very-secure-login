@@ -32,9 +32,7 @@ export function UserDialog({ me, user, onClose, onSaved }: Props) {
       if (isEdit) {
         await api.updateUser(user.id, {
           username,
-          // Empty = keep the current password.
           password: password || undefined,
-          // Nobody may change their own role.
           role: isSelf ? undefined : role,
         });
       } else {
@@ -51,7 +49,11 @@ export function UserDialog({ me, user, onClose, onSaved }: Props) {
   return (
     <dialog ref={ref} onClose={onClose} onCancel={onClose}>
       <form onSubmit={submit}>
-        <h2>{isEdit ? `Edit ${user.username}` : "Add user"}</h2>
+        <div className="dialog-heading">
+          <span className="eyebrow">{isEdit ? "ACCOUNT SETTINGS" : "NEW ACCOUNT"}</span>
+          <h2>{isEdit ? `Edit ${user.username}` : "Add a user"}</h2>
+          <p className="muted">{isEdit ? "Update account details and permissions." : "Create an account for a colleague."}</p>
+        </div>
 
         <label>
           Username
@@ -98,7 +100,7 @@ export function UserDialog({ me, user, onClose, onSaved }: Props) {
           </p>
         )}
 
-        <div className="actions">
+        <div className="actions dialog-actions">
           <button type="button" onClick={() => ref.current?.close()}>
             Cancel
           </button>

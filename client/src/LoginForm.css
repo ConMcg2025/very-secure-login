@@ -1,0 +1,186 @@
+/* Wooden login screen */
+
+.wood-login {
+  --wood-dark: #5a2e17;
+  --wood-mid: #7a4424;
+  --wood-light: #b8743a;
+  --bar: #7b2f19;
+  --bar-deep: #5e2112;
+  --cream: #f5e6d3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  justify-self: center;
+  color: var(--cream);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+
+.wood-badge,
+.wood-sign,
+.wood-sign::before {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.22' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.1 0 0 0 0 0.03 1.3 0 0 0 -0.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, var(--wood-mid), var(--wood-dark));
+  background-size: 400px 300px, cover;
+}
+
+
+.wood-badge {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--cream);
+  border: 5px solid var(--wood-light);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.25), 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.wood-badge svg {
+  width: 62px;
+  height: 62px;
+}
+
+.wood-sign-shadow {
+  width: 100%;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.35));
+}
+
+.wood-sign {
+  position: relative;
+  padding: 3rem 3rem 2.6rem;
+  background-image: linear-gradient(135deg, var(--wood-light), #8a4f26);
+  background-size: cover;
+  clip-path: polygon(
+    2% 8%, 8% 3%, 20% 5%, 35% 2%, 52% 4%, 68% 1%, 85% 4%, 97% 2%,
+    99% 14%, 97% 30%, 100% 48%, 98% 66%, 100% 82%, 96% 96%,
+    80% 98%, 62% 100%, 45% 97%, 28% 99%, 10% 97%, 1% 99%,
+    3% 82%, 0% 64%, 2% 46%, 0% 28%
+  );
+}
+
+.wood-sign::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(
+    5% 11%, 12% 7%, 25% 9%, 38% 6%, 52% 8%, 68% 5%, 85% 8%, 94% 7%,
+    96% 18%, 94% 32%, 96% 48%, 95% 66%, 96% 80%, 93% 93%,
+    80% 94%, 62% 96%, 45% 93%, 28% 95%, 10% 93%, 5% 95%,
+    6% 82%, 4% 64%, 6% 46%, 4% 28%
+  );
+}
+
+.wood-sign > * {
+  position: relative; 
+}
+
+.wood-title {
+  margin: 0 0 1.25rem;
+  text-align: center;
+  font-size: 1.15rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5); 
+}
+
+.wood-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.wood-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1rem;
+  background: var(--bar);
+  border: 0;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45);
+  color: var(--cream);
+}
+
+.wood-field:focus-within {
+  outline: 2px solid #ffd9a0;
+  outline-offset: 2px;
+}
+
+.field-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  opacity: 0.85;
+}
+
+.wood-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.85rem 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  outline: 0;
+  color: var(--cream);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.wood-field input::placeholder {
+  color: var(--cream);
+  opacity: 0.8;
+}
+
+.wood-button {
+  margin-top: 0.4rem;
+  padding: 0.85rem;
+  background: var(--bar-deep);
+  border: 0;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45);
+  color: var(--cream);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.wood-button:hover:not(:disabled) {
+  background: #7b2f19;
+}
+
+.wood-button:focus-visible {
+  outline: 2px solid #ffd9a0;
+  outline-offset: 2px;
+}
+
+.wood-error {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 3px;
+  background: rgba(20, 5, 0, 0.55);
+  color: #ffb4a6;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 420px) {
+  .wood-sign {
+    padding: 2.4rem 2rem 2.2rem;
+  }
+}

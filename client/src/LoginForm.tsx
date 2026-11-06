@@ -1,6 +1,21 @@
 import { useState, type FormEvent } from "react";
 import { api } from "./api";
 import type { Me } from "./types";
+import "./LoginForm.css";
+
+const UserIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="field-icon">
+    <circle cx="12" cy="8" r="4" fill="currentColor" />
+    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" fill="currentColor" />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="field-icon">
+    <rect x="5" y="10" width="14" height="11" rx="2" fill="currentColor" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="2" />
+  </svg>
+);
 
 export function LoginForm({ onLoggedIn }: { onLoggedIn: (me: Me) => void }) {
   const [username, setUsername] = useState("");
@@ -23,44 +38,60 @@ export function LoginForm({ onLoggedIn }: { onLoggedIn: (me: Me) => void }) {
   }
 
   return (
-    <main className="card login">
-      <h1>Kvist &amp; Bjælke</h1>
-      <p className="muted">Sign in to continue</p>
+    <main className="wood-login">
+      <div className="wood-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="8.5" r="3.6" fill="none" stroke="currentColor" strokeWidth="1.2" />
+          <path d="M5 20c0-3.8 3.1-6 7-6s7 2.2 7 6z" fill="none" stroke="currentColor" strokeWidth="1.2" />
+        </svg>
+      </div>
 
-      <form onSubmit={submit}>
-        <label>
-          Username
-          <input
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            autoComplete="username"
-            autoFocus
-            required
-            maxLength={64}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-            maxLength={128}
-          />
-        </label>
+     
+      <div className="wood-sign-shadow">
+        <div className="wood-sign">
+          <h1 className="wood-title">Kvist &amp; Bjælke</h1>
 
-        {error && (
-          <p className="error" role="alert">
-            {error}
-          </p>
-        )}
+          <form onSubmit={submit} className="wood-form">
+            <label className="wood-field">
+              <span className="sr-only">Username</span>
+              <UserIcon />
+              <input
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                placeholder="USERNAME"
+                autoComplete="username"
+                autoFocus
+                required
+                maxLength={64}
+              />
+            </label>
 
-        <button type="submit" className="primary" disabled={busy}>
-          {busy ? "Signing in…" : "Sign in"}
-        </button>
-      </form>
+            <label className="wood-field">
+              <span className="sr-only">Password</span>
+              <LockIcon />
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="PASSWORD"
+                autoComplete="current-password"
+                required
+                maxLength={128}
+              />
+            </label>
+
+            {error && (
+              <p className="wood-error" role="alert">
+                {error}
+              </p>
+            )}
+
+            <button type="submit" className="wood-button" disabled={busy}>
+              {busy ? "SIGNING IN…" : "LOGIN"}
+            </button>
+          </form>
+        </div>
+      </div>
     </main>
   );
 }
